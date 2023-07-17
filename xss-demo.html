@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no, viewport-fit=cover, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>Test-XSS</title>
+<body>
+  <input type="text" id="valueInput">
+  <div id="value"></div>
+
+  <script>
+    const inputEle = document.getElementById('valueInput')
+    const viewEle = document.getElementById('value')
+    console.log(inputEle)
+    inputEle.addEventListener('keyup',(e)=>{
+      console.log(e.target.value)
+      viewEle.innerHTML =e.target.value
+      // document.write(e.target.value)
+    })
+  </script>
+
+</body>
+
+</html>

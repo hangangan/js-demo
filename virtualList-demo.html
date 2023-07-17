@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>Test-VirtualList</title>
+<style>
+  html,body{
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+  }
+  /* 容器 */
+  .outerBox{
+    position: relative;
+    height: 100%;
+    overflow: auto;
+    background-color: aliceblue;
+  }
+  /* scroll占位 */
+  .listScroll{
+    min-height: 100%;
+  }
+  /* 内容主体容器 */
+  .innerBox{
+    min-height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+  }
+  /* 列表项 */
+  .listItem {
+    box-sizing: border-box;
+    height: 30px;
+    border-bottom: 1px solid gray;
+  }
+</style>
+<body>
+  <!-- 容器 -->
+  <div class="outerBox" id="listOuterBox" >
+    <!-- scroll占位 -->
+    <div class="listScroll" id="listScroll"></div>
+    <!-- 内容主体容器 -->
+    <div class="innerBox" id="listInnerBox" ></div>
+  </div>
+
+  <script>
+    // 基础变量
+    const DATA_MOCK = new Array(10000).fill(0).map((item,index)=>({id:index,value:'111sduihbiubiyuihidas'+index}))
+    const listOuterBox = document.getElementById("listOuterBox")
+    const listScrollEle = document.getElementById("listScroll")
+    const listInnerBox = document.getElementById('listInnerBox')
+    const screenHeight = listInnerBox.clientHeight
+    const BASE_CONFIG = {
+      itemHeight:20,
+      itemNum:DATA_MOCK.length,
+      listHeight:20*DATA_MOCK.length,
+      viewItemNum:Math.ceil(listOuterBox.clientHeight/20),
+    }
+     
+    // 业务逻辑
+    // step1:占位滚动条
+    listScrollEle.style.height = BASE_CONFIG.listHeight+'px'
+    // step2:监听滚动事件
+    listOuterBox.addEventListener("scroll",e=>{
+      listInnerBox.innerHTML=''
+      // 当前滚动位置
+      const curScrollY = listOuterBox.scrollTop
+      // 计算开始元素索引
+      const startIndex = Math.floor(curScrollY/BASE_CONFIG.itemHeight)
+      // 计算结束元素索引
+      const endIndex = startIndex+BASE_CONFIG.viewItemNum
+      // 计算开始元素偏移量
+      const curOffset = curScrollY-(curScrollY%BASE_CONFIG.itemHeight)
+      // 获取真实列表数据
+      const viewData = DATA_MOCK.slice(startIndex,Math.min(endIndex,DATA_MOCK.length))
+      // 设置位置偏移
+      listInnerBox.style.transform = `translateY(${curOffset}px)`
+      // 生成并插入视窗元素
+      viewData.forEach((item)=>{
+        const curLi = document.createElement('li')
+        curLi.style.height = BASE_CONFIG.itemHeight+'px'
+        curLi.innerText = `${item.id}、${item.value}`
+        listInnerBox.appendChild(curLi)
+      })
+    })
+  </script>
+</body>
+
+</html>
